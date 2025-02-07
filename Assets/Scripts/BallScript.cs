@@ -2,40 +2,21 @@ using UnityEngine;
 
 public class BallScript : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void OnCollisionEnter(Collision other)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        Vector3 up = new Vector3(0f, 1f, 0f);
-        Quaternion posRotation = Quaternion.Euler(45f, 0f, 0f);
-        Quaternion negRotation = Quaternion.Euler(-45f, 0f, 0f);
-
-        Vector3 posVector = posRotation * up;
-        Vector3 negVector = negRotation * up;
-        
-        /*Debug.DrawRay(transform.position, posVector, Color.red);
-        Debug.DrawRay(transform.position, negVector, Color.green);*/
-        
-        
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log($"Made Contact with {collision.gameObject.name}");
+        Debug.Log($"Made Contact with {other.gameObject.name}");
+        GetComponent<AudioSource>().Play();
         
         Rigidbody rb = GetComponent<Rigidbody>();
         
-        float speed = collision.relativeVelocity.magnitude;
-        float newSpeed = speed * 1.1f;
+        float speed = other.relativeVelocity.magnitude;
         
-        Vector3 newVelocity = Vector3.Reflect(rb.linearVelocity, collision.contacts[0].normal);
-        newVelocity = newVelocity.normalized * newSpeed;
-        
+        Vector3 newVelocity = other.relativeVelocity;
+        newVelocity = newVelocity.normalized * speed;
+        newVelocity.x = -newVelocity.x;
+
         rb.linearVelocity = newVelocity;
+        
+        Debug.Log($"Speed: {speed}, newVelocity: {newVelocity}");
     }
 }

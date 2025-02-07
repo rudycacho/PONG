@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     private int leftScore = 0;
     private int rightScore = 0;
     
+    private bool player1Scored = false;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -29,16 +31,18 @@ public class GameManager : MonoBehaviour
 
     public void LeftGoal(LeftGoalLogic leftGoalLogic)
     {
-        leftScore++;
-        leftScoreText.text = leftScore.ToString();
-        Debug.Log("Left Score: " + leftScore);
+        player1Scored = false;
+        rightScore++;
+        rightScoreText.text = rightScore.ToString();
+        Debug.Log("Right Score: " + rightScore);
         CheckScore();
     }
     public void RightGoal(RightGoalLogic rightGoalLogic)
     {
-        rightScore++;
-        rightScoreText.text = rightScore.ToString();
-        Debug.Log("Right Score: " + rightScore);
+        player1Scored = true;
+        leftScore++;
+        leftScoreText.text = leftScore.ToString();
+        Debug.Log("Left Score: " + leftScore);
         CheckScore();
     }
 
@@ -68,14 +72,23 @@ public class GameManager : MonoBehaviour
     void SpawnBall()
     {
         GameObject gameBall = Instantiate(ball, this.transform.position, Quaternion.identity);
-        
-        gameBall.GetComponent<Rigidbody>().linearVelocity = transform.TransformDirection(new Vector3(1,0,1) * 10.0f);
+
+        if (player1Scored)
+        {
+            gameBall.GetComponent<Rigidbody>().linearVelocity = transform.TransformDirection(new Vector3(1, 0, 0.5f) * 10.0f);
+        }
+        if (!player1Scored)
+        {
+            gameBall.GetComponent<Rigidbody>().linearVelocity = transform.TransformDirection(new Vector3(-1, 0, 0.5f) * 10.0f);
+        }
     }
 
     void ResetGame()
     {
         leftScore = 0;
         rightScore = 0;
+        leftScoreText.text = "0";
+        rightScoreText.text = "0";
         statusText.SetActive(false);
         SpawnBall();
     }
