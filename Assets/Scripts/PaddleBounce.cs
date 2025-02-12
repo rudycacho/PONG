@@ -23,5 +23,8 @@ public class PaddleBounce : MonoBehaviour
         newVelocity = Quaternion.Euler(0f, newRotSign * 60f * bounceDirection, 0f) * newVelocity;
         other.rigidbody.linearVelocity = newVelocity;
         
+        // Increase pitch when ball gets faster
+        other.gameObject.GetComponent<AudioSource>().pitch =  other.gameObject.GetComponent<AudioSource>().pitch + .02f;
+        
     }
 }

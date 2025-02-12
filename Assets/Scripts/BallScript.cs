@@ -6,7 +6,6 @@ public class BallScript : MonoBehaviour
     {
         Debug.Log($"Made Contact with {other.gameObject.name}");
         GetComponent<AudioSource>().Play();
-        
         Rigidbody rb = GetComponent<Rigidbody>();
         
         float speed = other.relativeVelocity.magnitude;

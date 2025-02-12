@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public GameObject rightGoal;
     public GameObject ball;
 
+    public int scoreToWin;
     private int leftScore = 0;
     private int rightScore = 0;
     
@@ -34,6 +35,8 @@ public class GameManager : MonoBehaviour
         player1Scored = false;
         rightScore++;
         rightScoreText.text = rightScore.ToString();
+        rightScoreText.color = Color.yellow;
+        leftScoreText.color = Color.white;
         Debug.Log("Right Score: " + rightScore);
         CheckScore();
     }
@@ -42,13 +45,15 @@ public class GameManager : MonoBehaviour
         player1Scored = true;
         leftScore++;
         leftScoreText.text = leftScore.ToString();
+        leftScoreText.color = Color.yellow;
+        rightScoreText.color = Color.white;
         Debug.Log("Left Score: " + leftScore);
         CheckScore();
     }
-
+    // Runs after a goal has been made
     void CheckScore()
     {
-        if (leftScore >= 11)
+        if (leftScore >= scoreToWin)
         {
             Debug.Log("Game Over, Left Paddle Wins!");
             statusText.GetComponent<TextMeshProUGUI>().text = "Game Over, Left Paddle Wins!";
@@ -56,7 +61,7 @@ public class GameManager : MonoBehaviour
             Invoke("ResetGame", 2.0f);
         }
 
-        else if (rightScore >= 11)
+        else if (rightScore >= scoreToWin)
         {
             Debug.Log("Game Over, Right Paddle Wins!");
             statusText.GetComponent<TextMeshProUGUI>().text = "Game Over, Right Paddle Wins!";
@@ -68,7 +73,7 @@ public class GameManager : MonoBehaviour
             Invoke("SpawnBall",2.0f);
         }
     }
-
+    // Logic relating to the ball spawning and who scored last
     void SpawnBall()
     {
         GameObject gameBall = Instantiate(ball, this.transform.position, Quaternion.identity);
@@ -85,11 +90,16 @@ public class GameManager : MonoBehaviour
 
     void ResetGame()
     {
+        // Reset Score + Counter
         leftScore = 0;
         rightScore = 0;
         leftScoreText.text = "0";
         rightScoreText.text = "0";
+        rightScoreText.color = Color.white;
+        leftScoreText.color = Color.white;
+        // Hide end text
         statusText.SetActive(false);
+        // Spawn the ball
         SpawnBall();
     }
 }
