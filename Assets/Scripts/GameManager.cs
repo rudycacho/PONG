@@ -6,11 +6,14 @@ public class GameManager : MonoBehaviour
 {
     public TextMeshProUGUI leftScoreText;
     public TextMeshProUGUI rightScoreText;
-    public GameObject statusText;
+    public GameObject endScreen;
 
     public GameObject leftGoal;
     public GameObject rightGoal;
     public GameObject ball;
+
+    public GameObject gameArea;
+    public GameObject paddles;
 
     public int scoreToWin;
     private int leftScore = 0;
@@ -21,17 +24,14 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        statusText.SetActive(false);
+        endScreen.SetActive(false);
         Invoke("SpawnBall",2.0f);
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    
     public void LeftGoal(LeftGoalLogic leftGoalLogic)
     {
+        // Destroy all power ups on board and multi-balls
+        clearScene();
         player1Scored = false;
         rightScore++;
         rightScoreText.text = rightScore.ToString();
@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
     }
     public void RightGoal(RightGoalLogic rightGoalLogic)
     {
+        clearScene();
         player1Scored = true;
         leftScore++;
         leftScoreText.text = leftScore.ToString();
@@ -56,17 +57,20 @@ public class GameManager : MonoBehaviour
         if (leftScore >= scoreToWin)
         {
             Debug.Log("Game Over, Left Paddle Wins!");
-            statusText.GetComponent<TextMeshProUGUI>().text = "Game Over, Left Paddle Wins!";
-            statusText.SetActive(true);
-            Invoke("ResetGame", 2.0f);
+            paddles.SetActive(false);
+            gameArea.SetActive(false);
+            //endScreen.GetComponent<TextMeshProUGUI>().text = "Game Over, Left Paddle Wins!";
+            endScreen.SetActive(true);
         }
 
         else if (rightScore >= scoreToWin)
         {
+            
             Debug.Log("Game Over, Right Paddle Wins!");
-            statusText.GetComponent<TextMeshProUGUI>().text = "Game Over, Right Paddle Wins!";
-            statusText.SetActive(true);
-            Invoke("ResetGame", 2.0f);
+            paddles.SetActive(false);
+            gameArea.SetActive(false);
+            //endScreen.GetComponent<TextMeshProUGUI>().text = "Game Over, Right Paddle Wins!";
+            endScreen.SetActive(true);
         }
         else
         {
@@ -80,15 +84,15 @@ public class GameManager : MonoBehaviour
 
         if (player1Scored)
         {
-            gameBall.GetComponent<Rigidbody>().linearVelocity = transform.TransformDirection(new Vector3(1, 0, 0.5f) * 10.0f);
+            gameBall.GetComponent<Rigidbody>().linearVelocity = transform.TransformDirection(new Vector3(1, 0.5f, 0.5f) * 10.0f);
         }
         if (!player1Scored)
         {
-            gameBall.GetComponent<Rigidbody>().linearVelocity = transform.TransformDirection(new Vector3(-1, 0, 0.5f) * 10.0f);
+            gameBall.GetComponent<Rigidbody>().linearVelocity = transform.TransformDirection(new Vector3(-1, 0.5f, 0.5f) * 10.0f);
         }
     }
 
-    void ResetGame()
+    public void ResetGame()
     {
         // Reset Score + Counter
         leftScore = 0;
@@ -98,8 +102,16 @@ public class GameManager : MonoBehaviour
         rightScoreText.color = Color.white;
         leftScoreText.color = Color.white;
         // Hide end text
-        statusText.SetActive(false);
+        endScreen.SetActive(false);
+        paddles.SetActive(true);
+        gameArea.SetActive(true);
         // Spawn the ball
         SpawnBall();
+    }
+
+    void clearScene()
+    {
+        GameObject extraBall = GameObject.FindGameObjectWithTag("Multi");
+        Destroy(extraBall);
     }
 }

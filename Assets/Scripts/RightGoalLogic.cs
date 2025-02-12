@@ -6,6 +6,7 @@ public class RightGoalLogic : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         transform.parent.GetComponent<GameManager>().RightGoal(this);
+        GetComponent<AudioSource>().Play();
         Destroy(collision.gameObject);
     }
 }

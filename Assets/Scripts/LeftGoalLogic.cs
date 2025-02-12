@@ -6,6 +6,7 @@ public class LeftGoalLogic : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         transform.parent.GetComponent<GameManager>().LeftGoal(this);
+        GetComponent<AudioSource>().Play();
         Destroy(collision.gameObject);
     }
 }
