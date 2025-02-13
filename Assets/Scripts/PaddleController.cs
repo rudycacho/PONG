@@ -1,21 +1,26 @@
 using System;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using Random = UnityEngine.Random;
 
 public class PaddleController : MonoBehaviour
 {
-    // Reference Paddles
+    // Reference Paddles and ball
     public GameObject leftPaddle;
     public GameObject rightPaddle;
+    public GameObject ball;
+    
     
     // Speed and Force Settings
     public float maxPaddleSpeed = 1f;
     public float paddleForce = 1f;
+    private bool cpuMode = true;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        cpuMode = GameProperties.CPUMode;
+        Debug.Log("CPU MODE IS: " + cpuMode);
     }
 
     // Update is called once per frame
@@ -31,35 +36,38 @@ public class PaddleController : MonoBehaviour
         leftPaddleTransform.position = newLeftPaddlePosition;
         
         // Right Paddle
-        float rightMovementAxis = Input.GetAxis("RightPaddle");
-        Transform rightPaddleTransform = rightPaddle.transform;
+        if (!cpuMode)
+        {
+            float rightMovementAxis = Input.GetAxis("RightPaddle");
+            Transform rightPaddleTransform = rightPaddle.transform;
         
-        Vector3 newRightPaddlePosition = rightPaddleTransform.position + new Vector3(0f,0f, rightMovementAxis * maxPaddleSpeed * Time.deltaTime);
-        newRightPaddlePosition.z = Math.Clamp(newRightPaddlePosition.z, -7.5f, 7.5f);
+            Vector3 newRightPaddlePosition = rightPaddleTransform.position + new Vector3(0f,0f, rightMovementAxis * maxPaddleSpeed * Time.deltaTime );
+            newRightPaddlePosition.z = Math.Clamp(newRightPaddlePosition.z, -7.5f, 7.5f);
         
-        rightPaddleTransform.position = newRightPaddlePosition;
-        
-    }
+            rightPaddleTransform.position = newRightPaddlePosition;
+        }
+        else
+        {
+            if (ball != null)
+            {
+                Transform rightPaddleTransform = rightPaddle.transform;
+                float newBallPosition = ball.transform.position.z;
 
-    /*void OnCollisionEnter(Collision other)
-    {
-        var paddleBounds = GetComponent<BoxCollider>().bounds;
-        float maxPaddleHeight = paddleBounds.max.z;
-        float minPaddleHeight = paddleBounds.min.z;
-        
-        float pctHeight = (other.transform.position.z - minPaddleHeight) / (maxPaddleHeight - minPaddleHeight);
-        float bounceDirection = (pctHeight - 0.5f) / 0.5f;
-        Debug.Log($"pct {pctHeight} + bounceDir {bounceDirection}");
-        
-        Vector3 currentVelocity = other.relativeVelocity;
-        float newSign = -Math.Sign(currentVelocity.x);
-        float newRotSign = -newSign;
-        
-        float newSpeed = currentVelocity.magnitude * 1.1f;
-        
-        Vector3 newVelocity = new Vector3(newSign, 0f, 0f) * newSpeed;
-        newVelocity = Quaternion.Euler(0f, newRotSign * 60f * bounceDirection, 0f) * newVelocity;
-        other.rigidbody.linearVelocity = newVelocity;
-        
-    }*/
+                if (newBallPosition >= rightPaddleTransform.position.z)
+                {
+                    Vector3 newRightPaddlePosition = rightPaddleTransform.position + new Vector3(0, 0, 1f  * maxPaddleSpeed * Time.deltaTime );
+                    newRightPaddlePosition.z = Math.Clamp(newRightPaddlePosition.z, -7.5f, 7.5f);
+                
+                    rightPaddleTransform.position = newRightPaddlePosition;
+                }
+                if (newBallPosition <= rightPaddleTransform.position.z)
+                {
+                    Vector3 newRightPaddlePosition = rightPaddleTransform.position + new Vector3(0, 0, -1f  * maxPaddleSpeed * Time.deltaTime );
+                    newRightPaddlePosition.z = Math.Clamp(newRightPaddlePosition.z, -7.5f, 7.5f);
+                
+                    rightPaddleTransform.position = newRightPaddlePosition;
+                }
+            }
+        }
+    }
 }

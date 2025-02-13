@@ -36,24 +36,31 @@ public class BallScript : MonoBehaviour
     }
     
     // Check For Power Ups
-    /*void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        
+        
         audio.PlayOneShot(ballPowerUpSound);
         // Wall Power Up
-        if (other.gameObject.CompareTag("Wall"))
+        if (other.gameObject.CompareTag("Big"))
         {
-            Debug.Log("Wall power up picked up!");
+            Debug.Log("Big Ball power up picked up!");
             Destroy(other.gameObject);
+            transform.localScale += new Vector3(2f, 0f, 2f);
+            Invoke("RevertSize",6.0f);
         }
         // Multi-Ball Power Up
-        if (other.gameObject.CompareTag("Multi"))
+        if (other.gameObject.CompareTag("Slow"))
         {
-            Debug.Log("Multi-Ball power up picked up!");
-            GameObject multiBall = GameObject.Instantiate(this.gameObject);
-            multiBall.transform.position = new Vector3(0, 0, 0); //this.transform.position;
-            multiBall.transform.rotation = this.transform.rotation;
-            multiBall.GetComponent<Rigidbody>().linearVelocity = this.GetComponent<Rigidbody>().linearVelocity;
+            Debug.Log("Slow power up picked up!");
             Destroy(other.gameObject);
+            rb.linearVelocity /= 2;
         }
-    }*/
+    }
+
+    void RevertSize()
+    {
+        transform.localScale -= new Vector3(2f, 0f, 2f);
+    }
 }

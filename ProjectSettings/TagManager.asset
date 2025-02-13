@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Wall
   - Multi
+  - Slow
+  - Big
   layers:
   - Default
   - TransparentFX

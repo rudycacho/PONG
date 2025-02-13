@@ -16,8 +16,8 @@ GameObject:
   - component: {fileID: 72233594502222248}
   - component: {fileID: 3226039909946629373}
   m_Layer: 0
-  m_Name: Wall Power Up
-  m_TagString: Untagged
+  m_Name: BIgBall
+  m_TagString: Big
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

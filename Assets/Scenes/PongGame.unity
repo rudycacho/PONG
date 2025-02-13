@@ -889,8 +889,8 @@ Transform:
   m_GameObject: {fileID: 818214077}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
-  m_LocalScale: {x: 5, y: 1, z: 2}
+  m_LocalPosition: {x: 0, y: -5, z: 0}
+  m_LocalScale: {x: 10, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1392,13 +1392,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftScoreText: {fileID: 1778692714}
   rightScoreText: {fileID: 397169205}
+  winnerText: {fileID: 1220581598}
   endScreen: {fileID: 1539678662}
-  leftGoal: {fileID: 1841880828}
-  rightGoal: {fileID: 1984533337}
+  powerUps:
+  - {fileID: 3805950307697053315, guid: a2e97b2585723d74c8acaecf5ffaafe3, type: 3}
+  - {fileID: 3805950307697053315, guid: 7807651335da2a142aa12fa0b34a1f62, type: 3}
   ball: {fileID: 5710583505664124353, guid: bcf038d3f7a5167478206625b7d5b9a5, type: 3}
   gameArea: {fileID: 1320945001}
   paddles: {fileID: 1776939457}
-  scoreToWin: 1
+  scoreToWin: 11
 --- !u!4 &1289297797
 Transform:
   m_ObjectHideFlags: 0
@@ -1408,7 +1410,7 @@ Transform:
   m_GameObject: {fileID: 1289297795}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.25, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1855,6 +1857,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1776939459}
   - component: {fileID: 1776939458}
+  - component: {fileID: 1776939460}
   m_Layer: 0
   m_Name: Paddles
   m_TagString: Untagged
@@ -1876,6 +1879,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftPaddle: {fileID: 1705510942}
   rightPaddle: {fileID: 1606523876}
+  ball: {fileID: 0}
   maxPaddleSpeed: 15
   paddleForce: 1
 --- !u!4 &1776939459
@@ -1895,6 +1899,18 @@ Transform:
   - {fileID: 1606523881}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1776939460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1776939457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da8cfd8bac4c9e542adea932e08394dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1778692712
 GameObject:
   m_ObjectHideFlags: 0
