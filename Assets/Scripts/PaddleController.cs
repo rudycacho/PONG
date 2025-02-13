@@ -21,6 +21,7 @@ public class PaddleController : MonoBehaviour
     {
         cpuMode = GameProperties.CPUMode;
         Debug.Log("CPU MODE IS: " + cpuMode);
+        ball = null;
     }
 
     // Update is called once per frame

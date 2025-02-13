@@ -12,10 +12,16 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI winnerText;
     // Public Game Objects
     public GameObject endScreen;
+    public GameObject pauseScreen;
     public GameObject[] powerUps;
     public GameObject ball;
     public GameObject gameArea;
     public GameObject paddles;
+    
+    // Music
+    public AudioClip matchMusic;
+    public AudioClip endMusic;
+    public new AudioSource audio;
     
     // Game Mode Properties
     public static bool PowerUpMode = true;
@@ -26,12 +32,18 @@ public class GameManager : MonoBehaviour
     private int roundCount = 0;
     private bool player1Scored = false;
     private List<GameObject> spawnedPowerUps = new List<GameObject>();
+    private GameObject gameBall;
+    private bool gamePaused = false;
+    private bool gameOver = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Time.timeScale = 1;
+        audio = GetComponent<AudioSource>();
         PowerUpMode = GameProperties.EnablePowerUps;
         endScreen.SetActive(false);
+        pauseScreen.SetActive(false);
         Invoke("SpawnBall",2.0f);
     }
     
@@ -67,6 +79,9 @@ public class GameManager : MonoBehaviour
             gameArea.SetActive(false);
             winnerText.GetComponent<TextMeshProUGUI>().text = "Game Over, Left Paddle Wins!";
             endScreen.SetActive(true);
+            audio.Stop();
+            audio.PlayOneShot(endMusic);
+            gameOver = true;
         }
 
         else if (rightScore >= scoreToWin)
@@ -77,6 +92,9 @@ public class GameManager : MonoBehaviour
             gameArea.SetActive(false);
             winnerText.GetComponent<TextMeshProUGUI>().text = "Game Over, Right Paddle Wins!";
             endScreen.SetActive(true);
+            audio.Stop();
+            audio.PlayOneShot(endMusic);
+            gameOver = true;
         }
         else
         {
@@ -88,7 +106,7 @@ public class GameManager : MonoBehaviour
     // Logic relating to the ball spawning and who scored last
     void SpawnBall()
     {
-        GameObject gameBall = Instantiate(ball, this.transform.position, Quaternion.identity);
+        gameBall = Instantiate(ball, this.transform.position, Quaternion.identity);
 
         paddles.GetComponent<PaddleController>().ball = gameBall;
         
@@ -114,6 +132,7 @@ public class GameManager : MonoBehaviour
     public void ResetGame()
     {
         // Reset Score + Counter
+        gameOver = false;
         leftScore = 0;
         rightScore = 0;
         roundCount = 0;
@@ -125,6 +144,8 @@ public class GameManager : MonoBehaviour
         endScreen.SetActive(false);
         paddles.SetActive(true);
         gameArea.SetActive(true);
+        audio.Stop();
+        audio.PlayOneShot(matchMusic);
         // Spawn the ball
         SpawnBall();
     }
@@ -137,7 +158,6 @@ public class GameManager : MonoBehaviour
         Vector3 spawnPos = new Vector3(randomX, 0.5f, randomz);
         GameObject powerUp = Instantiate(powerUps[selection], spawnPos, Quaternion.identity);
         spawnedPowerUps.Add(powerUp);
-        Debug.Log(spawnedPowerUps);
     }
 
     void ClearPowerUps()
@@ -145,6 +165,61 @@ public class GameManager : MonoBehaviour
         foreach (GameObject powerUp in spawnedPowerUps)
         {
             Destroy(powerUp);
+        }
+    }
+
+    void Update()
+    {
+        if (!gameOver)
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                Destroy(gameBall);
+                SpawnBall();
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                gamePaused = !gamePaused;
+                if (gamePaused)
+                {
+                    pauseScreen.SetActive(true);
+                    paddles.SetActive(false);
+                    gameArea.SetActive(false);
+                    if (gameBall != null)
+                    {
+                        gameBall.SetActive(false);
+                    }
+
+                    if (spawnedPowerUps != null)
+                    {
+                        foreach (GameObject powerUp in spawnedPowerUps)
+                        {
+                            powerUp.SetActive(false);
+                        }
+                    }
+                    audio.Pause();
+                    Time.timeScale = 0;
+                }
+                else
+                {
+                    pauseScreen.SetActive(false);
+                    paddles.SetActive(true);
+                    gameArea.SetActive(true);
+                    if (gameBall != null)
+                    {
+                        gameBall.SetActive(true);
+                    }
+                    if (spawnedPowerUps != null)
+                    {
+                        foreach (GameObject powerUp in spawnedPowerUps)
+                        {
+                            powerUp.SetActive(true);
+                        }
+                    }
+                    audio.UnPause();
+                    Time.timeScale = 1;
+                }
+            }
         }
     }
 }
